@@ -81,6 +81,6 @@ Peptide_conf_na <- Peptide_conf_tryp %>% filter(is.na(Modifications))
 Peptide_conf_mod <-Peptide_conf_tryp %>% filter(str_detect(Modifications,
                                                            '^((Gln->pyro-Glu@N-term|Carbamidomethyl\\(C\\)@\\d*|Oxidation\\(M\\)@\\d*);?\\s?){0,5}$'))
 
-
+#Finish export final data
 
 write.csv(Peptide_list5FDR,"Results/Peptide_list5FDR.csv")
