@@ -77,12 +77,9 @@ Peptide_conf_tryp <- Peptide_conf_locus %>% filter(is.na(Cleavages))
 #filter modifications
 Peptide_conf_na <- Peptide_conf_tryp %>% filter(is.na(Modifications)) 
 
-Peptide_conf_mod <- Peptide_conf_tryp %>% filter()
 
-Peptide_conf_mod <-filter(Peptide_conf_tryp, Modifications %in% c('Carbamidomethyl\\(C)','Oxidation\\(M)','Gln->pyro-Glu@N-term'))
-
-       (grepl('Carbamidomethyl\\(C)|Oxidation\\(M)|Gln->pyro-Glu@N-term', Modifications,
-                              ignore.case = FALSE, perl= TRUE))
+Peptide_conf_mod <-Peptide_conf_tryp %>% filter(str_detect(Modifications,
+                                                           '^((Gln->pyro-Glu@N-term|Carbamidomethyl\\(C\\)@\\d*|Oxidation\\(M\\)@\\d*);?\\s?){0,5}$'))
 
 
 
