@@ -81,8 +81,8 @@ Peptide_conf_mod <- Peptide_conf_tryp %>% filter()
 
 Peptide_conf_mod <-filter(Peptide_conf_tryp, Modifications %in% c('Carbamidomethyl\\(C)','Oxidation\\(M)','Gln->pyro-Glu@N-term'))
 
-       #(grepl('Carbamidomethyl\\(C)|Oxidation\\(M)|Gln->pyro-Glu@N-term', Modifications,
-         #                     ignore.case = FALSE, perl= TRUE))
+       (grepl('Carbamidomethyl\\(C)|Oxidation\\(M)|Gln->pyro-Glu@N-term', Modifications,
+                              ignore.case = FALSE, perl= TRUE))
 
 
 
