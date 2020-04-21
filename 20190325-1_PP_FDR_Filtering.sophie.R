@@ -3,14 +3,14 @@ library("readxl")
 library(stringr)
 
 
-#create files of FDR report #PUTNAMEOFTHEFILE
-FDR_thresh0 <- read_excel("Data/Ryegrass multi-file pooideae__FDR.xlsx", sheet = "Protein FDR Summary")
+#create files of FDR report #PUTNAMEOFTHEFILE_4_TIMES
+FDR_thresh0 <- read_excel("Data/Ryegrass_Poaceae_FDR.xlsx", sheet = "Protein FDR Summary")
                       
-Protein_summary <-read_excel("Data/Ryegrass multi-file pooideae__FDR.xlsx", 
+Protein_summary <-read_excel("Data/Ryegrass_Poaceae_FDR.xlsx", 
                              sheet = "Protein Summary")
-Peptide_summary <-read_excel("Data/Ryegrass multi-file pooideae__FDR.xlsx", 
+Peptide_summary <-read_excel("Data/Ryegrass_Poaceae_FDR.xlsx", 
                              sheet = "Distinct Peptide Summary")
-Conf_thresh_pep <- read_excel ("Data/Ryegrass multi-file pooideae__FDR.xlsx", 
+Conf_thresh_pep <- read_excel ("Data/Ryegrass_Poaceae_FDR.xlsx", 
                                sheet ="Distinct Peptide FDR Summary")
 
 #Select FDR Threshold of unused
@@ -47,21 +47,23 @@ Protein_5FDR_final_list <- filter(Protein_5FDR_specie, !grepl
 #                                  ('RRRR', Accession))
 
 #Export #CHANGE_NAME_OF_FILE_HERE
-write.csv (Protein_5FDR_final_list, "Results/Protein_5FDR_final_Pooideae.csv")
+write.csv (Protein_5FDR_final_list, "Results/Protein_5FDR_final_Poaceae.csv")
 #write.csv (Protein_1FDR_final_list, "Results/Protein_1FDR_final_Pooideae.csv")
 
 ####Peptides
 #select peptide confidence
 conf_number <-  select (Conf_thresh_pep,c=19)
-conf0.05 <- conf_number [6,] 
+conf0.01 <- conf_number [5,] 
 
 #make confidence numeric
-conf5 <- conf0.05 * 100
-conf5<- as.numeric(conf5$c)
+conf0.01<- as.numeric(conf0.01$c)
+conf1<- conf0.01 * 100
+#conf5<- as.numeric(conf5$c)
 
+if (conf1 > 99) {conf1=99}
 
 #filter peptide summary by confidence
-Peptide_conf <- Peptide_summary %>% filter_at(7, all_vars(. >= conf5))
+Peptide_conf<- Peptide_summary %>% filter_at(7, all_vars(. >= conf1))
 
 #Filter peptides of proteins from other species
 Peptide_conf_specie<- filter(Peptide_conf, !grepl
@@ -72,17 +74,22 @@ colnames(Peptide_conf_specie )[1] <- 'Peptide_locus'
 Peptide_conf_locus <- filter (Peptide_conf_specie, grepl ('\\.001', Peptide_locus))
 
 #Filter tryptic peptide
-Peptide_conf_tryp <- Peptide_conf_locus %>% filter(is.na(Cleavages)) 
+Peptide_conf_tryp <- Peptide_conf_locus %>% filter(is.na(Cleavages))
+
+#Filter Reverse peptide
+Peptide_conf_tryp2 <- filter(Peptide_conf_tryp, !grepl ('RRRR', Accessions))
 
 #filter modifications
-Peptide_conf_na <- Peptide_conf_tryp %>% filter(is.na(Modifications)) 
+Peptide_conf_na <- Peptide_conf_tryp2 %>% filter(is.na(Modifications)) 
   
 
-Peptide_conf_mod <-Peptide_conf_tryp %>% filter(str_detect(Modifications,
+Peptide_conf_mod <-Peptide_conf_tryp2 %>% filter(str_detect(Modifications,
                                                            '^((Gln->pyro-Glu@N-term|Carbamidomethyl\\(C\\)@\\d*|Oxidation\\(M\\)@\\d*);?\\s?){0,5}$'))
-#join NA data and Mod data
-Peptide_list5FDR <- bind_rows(Peptide_conf_na, Peptide_conf_mod)  
 
-#Finish export final data
+#join NA data and Mod data and delete reverse peptide
+Peptide_list1FDR <- bind_rows(Peptide_conf_na, Peptide_conf_mod) 
 
-write.csv(Peptide_list5FDR,"Results/Peptide_list5FDR_final_Pooideae.csv")
+
+#Finish export final data  ####NAME_THE_FILE
+
+write.csv(Peptide_list1FDR,"Results/Peptide_list1FDR_final_Poaceae.csv")
