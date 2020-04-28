@@ -4,13 +4,13 @@ library(stringr)
 
 
 #create files of FDR report #PUTNAMEOFTHEFILE_4_TIMES
-FDR_thresh0 <- read_excel("Data/Ryegrass_Poaceae_FDR.xlsx", sheet = "Protein FDR Summary")
+FDR_thresh0 <- read_excel("Data/MC 20171110 6600TF-M_32ryegrass__FDR.xlsx", sheet = "Protein FDR Summary")
                       
-Protein_summary <-read_excel("Data/Ryegrass_Poaceae_FDR.xlsx", 
+Protein_summary <-read_excel("Data/MC 20171110 6600TF-M_32ryegrass__FDR.xlsx", 
                              sheet = "Protein Summary")
-Peptide_summary <-read_excel("Data/Ryegrass_Poaceae_FDR.xlsx", 
+Peptide_summary <-read_excel("Data/MC 20171110 6600TF-M_32ryegrass__FDR.xlsx", 
                              sheet = "Distinct Peptide Summary")
-Conf_thresh_pep <- read_excel ("Data/Ryegrass_Poaceae_FDR.xlsx", 
+Conf_thresh_pep <- read_excel ("Data/MC 20171110 6600TF-M_32ryegrass__FDR.xlsx", 
                                sheet ="Distinct Peptide FDR Summary")
 
 #Select FDR Threshold of unused
@@ -47,7 +47,7 @@ Protein_5FDR_final_list <- filter(Protein_5FDR_specie, !grepl
 #                                  ('RRRR', Accession))
 
 #Export #CHANGE_NAME_OF_FILE_HERE
-write.csv (Protein_5FDR_final_list, "Results/Protein_5FDR_final_Poaceae.csv")
+write.csv (Protein_5FDR_final_list, "Results/Protein_5FDR_final_Poaceae_LoliumDB_AAsub.csv")
 #write.csv (Protein_1FDR_final_list, "Results/Protein_1FDR_final_Pooideae.csv")
 
 ####Peptides
@@ -84,7 +84,11 @@ Peptide_conf_na <- Peptide_conf_tryp2 %>% filter(is.na(Modifications))
   
 
 Peptide_conf_mod <-Peptide_conf_tryp2 %>% filter(str_detect(Modifications,
-                                                           '^((Gln->pyro-Glu@N-term|Carbamidomethyl\\(C\\)@\\d*|Oxidation\\(M\\)@\\d*);?\\s?){0,5}$'))
+                                                           '^((Gln->pyro-Glu@N-term|Carbamidomethyl\\(C\\)@\\d*|[A,C,G,I,L,M,P,S,T,V]..->[A,C,G,I,L,M,P,S,T,V]..@\\d*|Oxidation\\(M\\)@\\d*);?\\s?){0,5}$'))
+
+
+                                                          
+                                                             
 
 #join NA data and Mod data and delete reverse peptide
 Peptide_list1FDR <- bind_rows(Peptide_conf_na, Peptide_conf_mod) 
@@ -92,4 +96,4 @@ Peptide_list1FDR <- bind_rows(Peptide_conf_na, Peptide_conf_mod)
 
 #Finish export final data  ####NAME_THE_FILE
 
-write.csv(Peptide_list1FDR,"Results/Peptide_list1FDR_final_Poaceae.csv")
+write.csv(Peptide_list1FDR,"Results/Peptide_list1FDR_final_Poaceae_LoliumDB_AAsub.csv")
