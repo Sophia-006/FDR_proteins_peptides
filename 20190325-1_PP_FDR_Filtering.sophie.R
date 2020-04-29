@@ -3,7 +3,7 @@ library("readxl")
 library(stringr)
 
 
-#create files of FDR report #PUTNAMEOFTHEFILE_4_TIMES
+#create files of FDR report #PUTNAMEOFTHEFILE_4_TIMES between ""
 FDR_thresh0 <- read_excel("Data/MC 20171110 6600TF-M_32ryegrass__FDR.xlsx", sheet = "Protein FDR Summary")
                       
 Protein_summary <-read_excel("Data/MC 20171110 6600TF-M_32ryegrass__FDR.xlsx", 
